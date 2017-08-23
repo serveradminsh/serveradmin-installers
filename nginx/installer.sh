@@ -55,7 +55,7 @@ dhparamBits="4096"
 nginxUser="nginx"
 openSslVers="1.0.2k"
 pagespeedVers="1.12.34.2"
-pcreVers="8.40"
+pcreVers="8.41"
 zlibVers="1.2.11"
 
 #+----------------------------------------------------------------------------+
@@ -124,9 +124,9 @@ nginxSetup()
     #+ https://modpagespeed.com/doc/build_ngx_pagespeed_from_source
     #+------------------------------------------------------------------------+
     cd /usr/local/src/github \
-    && wget https://github.com/pagespeed/ngx_pagespeed/archive/v${pagespeedVers}-beta.zip \
-    && unzip v${pagespeedVers}-beta.zip \
-    && cd ngx_pagespeed-${pagespeedVers}-beta \
+    && wget https://github.com/pagespeed/ngx_pagespeed/archive/v${pagespeedVers}-stable.zip \
+    && unzip v${pagespeedVers}-stable.zip \
+    && cd ngx_pagespeed-${pagespeedVers}-stable \
     && export psol_url=https://dl.google.com/dl/page-speed/psol/${pagespeedVers}.tar.gz \
     && [ -e scripts/format_binary_url.sh ] && psol_url=$(scripts/format_binary_url.sh PSOL_BINARY_URL) \
     && wget ${psol_url} \
@@ -229,7 +229,7 @@ nginxCompile()
                         --add-module=/usr/local/src/github/ngx_brotli \
                         --add-module=/usr/local/src/github/headers-more-nginx-module \
                         --add-module=/usr/local/src/github/set-misc-nginx-module \
-                        --add-module=/usr/local/src/github/ngx_pagespeed-${pagespeedVers}-beta \
+                        --add-module=/usr/local/src/github/ngx_pagespeed-${pagespeedVers}-stable \
     && make -j ${cpuCount} \
     && make install
 }
