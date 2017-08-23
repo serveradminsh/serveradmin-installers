@@ -109,7 +109,7 @@ nginxSetup()
     #+ 8). NAXSI (Module)
     #+------------------------------------------------------------------------+
     cd /usr/local/src/github \
-    && git clone https://github.com/nginx/nginx.git \
+    && git clone https://github.com/bbbenji/nginx.git \
     && git clone https://github.com/simpl/ngx_devel_kit.git \
     && git clone https://github.com/openresty/headers-more-nginx-module.git \
     && git clone https://github.com/vozlt/nginx-module-vts.git \
