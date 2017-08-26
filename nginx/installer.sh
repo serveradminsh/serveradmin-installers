@@ -176,7 +176,8 @@ nginxCompile()
     #+------------------------------------------------------------------------+
     #+ Download, Extract, Configure & Compile NGINX
     #+------------------------------------------------------------------------+
-    wget https://nginx.org/download/nginx-${nginxVers}.tar.gz \
+    cd /usr/local/src/github \
+    && wget https://nginx.org/download/nginx-${nginxVers}.tar.gz \
     && tar -xvzf nginx-${nginxVers}.tar.gz \
     && cd /usr/local/src/github/nginx-${nginxVers} \
     && ./configure --prefix=/etc/nginx \
