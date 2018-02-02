@@ -52,7 +52,7 @@ fi
 cpuCount=$(nproc --all)
 currentPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dhparamBits="4096"
-nginxUser="nginx"
+nginxUser="www-data"
 openSslVers="1.1.0g"
 pagespeedVers="1.12.34.3"
 pcreVers="8.40"
@@ -260,6 +260,11 @@ nginxConfigure()
     cp -R ${currentPath}/html/index.html /home/nginx/htdocs/public/index.html \
     && cp -R ${currentPath}/nginx/* /etc/nginx \
     && cp -R ${currentPath}/systemd/nginx.service /lib/systemd/system/nginx.service
+
+    #+------------------------------------------------------------------------+
+    #+ Copy UFW rules
+    #+------------------------------------------------------------------------+
+    cp -R ${currentPath}/ufw/* /etc/ufw/applications.d
 
     #+------------------------------------------------------------------------+
     #+ Set correct permissions and ownership

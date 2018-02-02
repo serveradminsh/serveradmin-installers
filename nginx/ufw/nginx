@@ -1,0 +1,14 @@
+[NginxHTTP]
+title=Web Server (Nginx, HTTP)
+description=Small, but very powerful and efficient web server
+ports=80/tcp
+
+[NginxHTTPS]
+title=Web Server (Nginx, HTTPS)
+description=Small, but very powerful and efficient web server
+ports=443/tcp
+
+[NginxFull]
+title=Web Server (Nginx, HTTP + HTTPS + phpMyAdmin)
+description=Small, but very powerful and efficient web server
+ports=80,443/tcp

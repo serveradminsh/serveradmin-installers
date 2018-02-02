@@ -1,0 +1,4 @@
+[VSFTPD]
+title=VSFTPD
+description=VSFTPD TCP
+ports=20,21,990,40000:50000/tcp
