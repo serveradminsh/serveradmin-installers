@@ -1,0 +1,4 @@
+[phpMyAdmin]
+title=phpMyAdmin
+description=A web interface for MySQL and MariaDB.
+ports=8000/tcp

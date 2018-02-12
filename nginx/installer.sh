@@ -52,11 +52,12 @@ fi
 cpuCount=$(nproc --all)
 currentPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dhparamBits="4096"
-nginxUser="nginx"
-openSslVers="1.0.2k"
-pagespeedVers="1.12.34.2"
+nginxUser="www-data"
+openSslVers="1.1.0g"
+pagespeedVers="1.12.34.3"
 pcreVers="8.40"
 zlibVers="1.2.11"
+nginxVers="1.12.2"
 
 #+----------------------------------------------------------------------------+
 #+ Setup
@@ -99,17 +100,15 @@ nginxSetup()
     #+------------------------------------------------------------------------+
     #+ Clone required repositories from GitHub
     #+------------------------------------------------------------------------+
-    #+ 1). NGINX
-    #+ 2). NGINX Dev. Kit (Module)
-    #+ 3). NGINX Headers More (Module)
-    #+ 4). NGINX VTS (Module)
-    #+ 5). Brotli (for Brotli Compression)
-    #+ 6). LibBrotli
-    #+ 7). NGINX Brotli (Module)
-    #+ 8). NAXSI (Module)
+    #+ 1). NGINX Dev. Kit (Module)
+    #+ 2). NGINX Headers More (Module)
+    #+ 3). NGINX VTS (Module)
+    #+ 4). Brotli (for Brotli Compression)
+    #+ 5). LibBrotli
+    #+ 6). NGINX Brotli (Module)
+    #+ 7). NAXSI (Module)
     #+------------------------------------------------------------------------+
     cd /usr/local/src/github \
-    && git clone https://github.com/nginx/nginx.git \
     && git clone https://github.com/simpl/ngx_devel_kit.git \
     && git clone https://github.com/openresty/headers-more-nginx-module.git \
     && git clone https://github.com/vozlt/nginx-module-vts.git \
@@ -124,9 +123,9 @@ nginxSetup()
     #+ https://modpagespeed.com/doc/build_ngx_pagespeed_from_source
     #+------------------------------------------------------------------------+
     cd /usr/local/src/github \
-    && wget https://github.com/pagespeed/ngx_pagespeed/archive/v${pagespeedVers}-beta.zip \
-    && unzip v${pagespeedVers}-beta.zip \
-    && cd ngx_pagespeed-${pagespeedVers}-beta \
+    && wget https://github.com/pagespeed/ngx_pagespeed/archive/v${pagespeedVers}-stable.zip \
+    && unzip v${pagespeedVers}-stable.zip \
+    && cd incubator-pagespeed-ngx-${pagespeedVers}-stable \
     && export psol_url=https://dl.google.com/dl/page-speed/psol/${pagespeedVers}.tar.gz \
     && [ -e scripts/format_binary_url.sh ] && psol_url=$(scripts/format_binary_url.sh PSOL_BINARY_URL) \
     && wget ${psol_url} \
@@ -175,10 +174,13 @@ nginxSetup()
 nginxCompile()
 {
     #+------------------------------------------------------------------------+
-    #+ Configure & Compile NGINX
+    #+ Download, Extract, Configure & Compile NGINX
     #+------------------------------------------------------------------------+
-    cd /usr/local/src/github/nginx \
-    && ./auto/configure --prefix=/etc/nginx \
+    cd /usr/local/src/github \
+    && wget https://nginx.org/download/nginx-${nginxVers}.tar.gz \
+    && tar -xvzf nginx-${nginxVers}.tar.gz \
+    && cd /usr/local/src/github/nginx-${nginxVers} \
+    && ./configure --prefix=/etc/nginx \
                         --sbin-path=/usr/sbin/nginx \
                         --conf-path=/etc/nginx/config/nginx.conf \
                         --lock-path=/etc/nginx/lock/nginx.lock \
@@ -229,7 +231,7 @@ nginxCompile()
                         --add-module=/usr/local/src/github/ngx_brotli \
                         --add-module=/usr/local/src/github/headers-more-nginx-module \
                         --add-module=/usr/local/src/github/set-misc-nginx-module \
-                        --add-module=/usr/local/src/github/ngx_pagespeed-${pagespeedVers}-beta \
+                        --add-module=/usr/local/src/github/incubator-pagespeed-ngx-${pagespeedVers}-stable \
     && make -j ${cpuCount} \
     && make install
 }
@@ -258,6 +260,11 @@ nginxConfigure()
     cp -R ${currentPath}/html/index.html /home/nginx/htdocs/public/index.html \
     && cp -R ${currentPath}/nginx/* /etc/nginx \
     && cp -R ${currentPath}/systemd/nginx.service /lib/systemd/system/nginx.service
+
+    #+------------------------------------------------------------------------+
+    #+ Copy UFW rules
+    #+------------------------------------------------------------------------+
+    cp -R ${currentPath}/ufw/* /etc/ufw/applications.d
 
     #+------------------------------------------------------------------------+
     #+ Set correct permissions and ownership
